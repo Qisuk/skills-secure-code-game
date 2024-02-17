@@ -23,6 +23,9 @@ def source():
     DB_CRUD_ops().exec_multi_query(request.args["input"])
     DB_CRUD_ops().exec_user_script(request.args["input"])
 ### Unrelated to the exercise -- Ends here -- Please ignore
+    
+def cleanse_query_parameter_manual( parameter):
+    return str(parameter).split(";")[0].replace("'","").replace("--","") # take first entry, remove ' and -- strings
 
 class Connect(object):
 
@@ -127,10 +130,18 @@ class DB_CRUD_ops(object):
         finally:
             db_con.close()
 
+
+
     # retrieves the price of a stock symbol from the stocks table
     # Example: get_stock_price('MSFT') will result into executing
     # SELECT price FROM stocks WHERE symbol = 'MSFT'
     def get_stock_price(self, stock_symbol):
+        print("get_stock_price")
+        print(f"stock_symbol {stock_symbol}")
+        #this is very crude
+        stock_symbol = cleanse_query_parameter_manual(stock_symbol)
+
+        print(f"cleaned stock_symbol {stock_symbol}")
         # building database from scratch as it is more suitable for the purpose of the lab
         db = Create()
         con = Connect()
@@ -179,7 +190,8 @@ class DB_CRUD_ops(object):
             base_query = "UPDATE stocks SET price = '%d' WHERE symbol = '%s'" % (price, stock_symbol)
             paramaterised_query = "UPDATE stocks SET price = ? WHERE symbol = ?" 
             res += "[QUERY] " + base_query + "\n"
-
+            stock_symbol = cleanse_query_parameter_manual(stock_symbol)
+            price = cleanse_query_parameter_manual(price)
             cur.execute(paramaterised_query,(price, stock_symbol))
             db_con.commit()
             query_outcome = cur.fetchall()
@@ -198,9 +210,11 @@ class DB_CRUD_ops(object):
     #          SELECT * FROM stocks WHERE symbol = 'MSFT'
     # Example: UPDATE stocks SET price = 310.0 WHERE symbol = 'MSFT'
     def exec_multi_query(self, query):
+        print("exec_multi_query")
         # building database from scratch as it is more suitable for the purpose of the lab
         db = Create()
         con = Connect()
+
         try:
             path = os.path.dirname(os.path.abspath(__file__))
             db_path = os.path.join(path, 'level-4.db')
@@ -229,6 +243,7 @@ class DB_CRUD_ops(object):
     # Example: SELECT price FROM stocks WHERE symbol = 'MSFT';
     #          SELECT * FROM stocks WHERE symbol = 'MSFT'
     def exec_user_script(self, query):
+        print("exec_multi_query")
         # building database from scratch as it is more suitable for the purpose of the lab
         db = Create()
         con = Connect()
