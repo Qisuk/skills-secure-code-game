@@ -11,7 +11,7 @@ import bcrypt
 
 class Random_generator:
 
-    # generates a random token
+    # generates a random token 
     def generate_token(self, length=8, alphabet=(
     '0123456789'
     'abcdefghijklmnopqrstuvwxyz'
