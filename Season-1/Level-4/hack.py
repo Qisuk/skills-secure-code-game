@@ -35,14 +35,14 @@ class TestDatabase(unittest.TestCase):
         op = c.DB_CRUD_ops()
 
         # what the developer expects to be passed is this:
-        developer_expectation = op.get_stock_price('MSFT')
+        actual_developer_expectation = op.get_stock_price('MSFT')
         developer_output_expectation = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'\n[RESULT] (300.0,)\n"
 
         # but the hacker passes is this:
-        what_hacker_passes = op.get_stock_price("MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--")
-        hacker_output = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--'\n[SCRIPT EXECUTION]\n"
+        actual_hacker_output = op.get_stock_price("MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--")
+        hacker_expectedoutput = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--'\n[SCRIPT EXECUTION]\n"
 
-        self.assertEqual(developer_output_expectation, what_hacker_passes)
+        self.assertEqual(developer_output_expectation, actual_hacker_output)
 
 # Further exploit input could be:
 # "MSFT'; DROP TABLE stocks--"
