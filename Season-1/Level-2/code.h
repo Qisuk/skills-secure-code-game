@@ -70,9 +70,12 @@ int create_user_account(bool isAdmin, const char *username) {
 // Updates the matching setting for the specified user and returns the status of the operation
 // A setting is some arbitrary string associated with an index as a key
 bool update_setting(int user_id, const char *index, const char *value) {
+    printf("update settings for userid '%i : index '%c' \n\n",user_id,*index);
+
     if (user_id < 0 || user_id >= MAX_USERS)
         return false;
-
+    if(*index == '-') // this seems a dumb check, but it seems to work in this case...
+        return false;
     char *endptr;
     long i, v;
     i = strtol(index, &endptr, 10);
