@@ -56,24 +56,24 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		email := reqBody.Email
 		password := reqBody.Password
-
+		invalidEmailFormatError := "Invalid email format"
 		if !isValidEmail(email) {
-			log.Printf("Invalid email format: %q", email)
-			http.Error(w, "Invalid email format", http.StatusBadRequest)
+			log.Print(invalidEmailFormatError)
+			http.Error(w, invalidEmailFormatError, http.StatusBadRequest)
 			return
 		}
-
+		passwordOrUsernameErrorMessage := "Invalid Email or Password"
 		storedPassword, ok := testFakeMockUsers[email]
 		if !ok {
-			http.Error(w, "invalid email or password", http.StatusUnauthorized)
+			http.Error(w, passwordOrUsernameErrorMessage, http.StatusUnauthorized)
 			return
 		}
-
+		succesfulLoginMessage := "Succesful login request"
 		if password == storedPassword {
-			log.Printf("User %q logged in successfully with a valid password %q", email, password)
+			log.Print(succesfulLoginMessage)
 			w.WriteHeader(http.StatusOK)
 		} else {
-			http.Error(w, "Invalid Email or Password", http.StatusUnauthorized)
+			http.Error(w, passwordOrUsernameErrorMessage, http.StatusUnauthorized)
 		}
 
 	} else {
