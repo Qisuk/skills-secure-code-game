@@ -27,4 +27,4 @@ jobs:
       - name: Check GitHub Status
 
         run: | 
-          https://www.githubstatus.com/api/v2/status.json
+          curl https://www.githubstatus.com/api/v2/status.json
