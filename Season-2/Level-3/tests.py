@@ -43,9 +43,10 @@ class MyTestCase(TestCase):
         self.assert200(response)
         self.assertEqual(response.data.decode()[:15], '<!DOCTYPE html>')
 
-    def test_index_missing_planet(self):
+    def test_index_missing_planet(self): # this test seems to pass  <script ...> 
         response = self.client.post('/')
         self.assert200(response)
+        print(response.data.decode())
         self.assertEqual(response.data.decode(), '<h2>Please enter a planet name.</h2>')
 
     def test_index_empty_planet(self):

@@ -38,11 +38,13 @@ def index():
     if request.method == 'POST':
         planet = request.form.get('planet')
         sanitized_planet = escape(planet)
-        print(sanitized_planet)
+        print(f"planet {planet}")
+        print(f"sanitized {sanitized_planet}")
+        if sanitized_planet == "None":
+            sanitized_planet == None
         if sanitized_planet:
             if 'script' in sanitized_planet.lower() :
                 return '<h2>Blocked</h2></p>'
-    
             return render_template('details.html', 
                                    planet=sanitized_planet, 
                                    info=get_planet_info(sanitized_planet))
