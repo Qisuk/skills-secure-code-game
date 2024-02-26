@@ -26,7 +26,7 @@ const upload = multer({ storage });
 
 app.post("/ufo/upload", upload.single("file"), (req, res) => {
   if (!req.file) {
-    return res.status(400).send("No file uploaded.");
+    return res.status(500).send("Endpoint Not Found");
   }
 
   console.log("Received uploaded file:", req.file.originalname);
@@ -46,8 +46,8 @@ app.post("/ufo", (req, res) => {
   } else if (contentType === "application/xml") {
     try {
       const xmlDoc = libxmljs.parseXml(req.body, {
-        replaceEntities: true,
-        recover: true,
+        replaceEntities: false,
+        recover: false,
         nonet: false,
       });
 
@@ -69,17 +69,19 @@ app.post("/ufo", (req, res) => {
         xmlDoc.toString().includes('SYSTEM "') &&
         xmlDoc.toString().includes(".admin")
       ) {
-        extractedContent.forEach((command) => {
-          exec(command, (err, output) => {
-            if (err) {
-              console.error("could not execute command: ", err);
-              return;
-            }
-            console.log("Output: \n", output);
-            res.status(200).set("Content-Type", "text/plain").send(output);
-          });
-        });
-      } else {
+        // extractedContent.forEach((command) => {
+        //   exec(command, (err, output) => {
+        //     if (err) {
+        //       console.error("could not execute command: ", err);
+        //       return;
+        //     }
+        //     console.log("Output: \n", output);
+        //     res.status(200).set("Content-Type", "text/plain").send(output);
+        //   });
+        // });
+        return res.status(400).send("Invalid XML");
+      } 
+      else {
         res
           .status(200)
           .set("Content-Type", "text/plain")
